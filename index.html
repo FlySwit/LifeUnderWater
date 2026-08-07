@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020309">
+<title>LifeUnderWater — Coming Soon para Android</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-loading">
+
+<!-- Fixed backdrop: one continuous 3D dive behind the whole page, no section seams -->
+<div class="bg-layer bg-sky" id="bgSky"><img src="assets/sky.svg" alt="" aria-hidden="true"></div>
+<canvas class="bg-layer" id="bgCanvas" aria-hidden="true"></canvas>
+<div class="bg-layer bg-vignette" aria-hidden="true"></div>
+
+<!-- Preloader: splash de carga con el logo de Olmic Developers -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader-rings"><span></span><span></span><span></span></div>
+  <img src="assets/olmic-logo.png" alt="" class="preloader-logo" draggable="false">
+  <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  <p class="preloader-label">Sumergiendo en LifeUnderWater</p>
+</div>
+
+<div class="site-content" id="siteContent">
+
+<nav class="site-nav">
+  <div class="nav-logo">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 L14.5 9 L22 12 L14.5 15 L12 22 L9.5 15 L2 12 L9.5 9 Z" fill="#4dedd4"/></svg>
+    LifeUnderWater
+  </div>
+  <ul class="nav-links">
+    <li><a href="#top" data-scroll>Inicio</a></li>
+    <li><a href="#estudio" data-scroll>Estudio</a></li>
+    <li><a href="#juego" data-scroll>El juego</a></li>
+    <li><a href="#bestiario" data-scroll>Bestiario</a></li>
+    <li><a href="#galeria" data-scroll>Galería</a></li>
+    <li><a href="#descarga" data-scroll>Descarga</a></li>
+  </ul>
+  <div class="depth-hud">
+    <span class="hud-label">Profundidad</span>
+    <span class="hud-value" id="depthValue">-000 m</span>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <p class="eyebrow">Expedición abisal — mundo oceánico alienígena</p>
+  <h1>LifeUnderWater</h1>
+  <p class="tagline">Un océano que no es el nuestro. Desciende y descúbrelo.</p>
+  <span class="badge">Coming Soon · Android</span>
+  <div class="scroll-cue">DESCIENDE ↓</div>
+</header>
+
+<section class="studio-credit reveal" id="estudio">
+  <div class="section-inner studio-inner" id="studioInner">
+    <p class="eyebrow">Detrás del abismo</p>
+    <div class="studio-logo-wrap" id="studioLogoWrap">
+      <div class="studio-rings" aria-hidden="true"><span></span><span></span><span></span></div>
+      <img src="assets/olmic-logo.png" alt="Olmic Developers" class="studio-logo" draggable="false">
+    </div>
+    <h2 class="studio-heading">Producido y creado por</h2>
+    <p class="studio-company">OLMIC DEVELOPERS</p>
+    <p class="studio-sub">Estudio independiente obsesionado con construir océanos que no existen en ningún mapa, criatura a criatura, corriente a corriente.</p>
+  </div>
+</section>
+
+<section class="features" id="juego">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">El juego</p>
+      <h2>Un ecosistema que no habías visto</h2>
+      <p class="lede">LifeUnderWater es una inmersión low poly: geometría limpia, colores imposibles y una luz que cambia con cada metro de profundidad. Una experiencia única bajo el mar, diseñada para sentirse inmensa sin pesar — fluida incluso en equipos modestos, sin sacrificar ni un ápice de estilo.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card reveal">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 4 L28 20 L44 24 L28 28 L24 44 L20 28 L4 24 L20 20 Z" stroke="#4dedd4" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>Fauna bioluminiscente</h3>
+        <p>Criaturas que generan su propia luz y reaccionan a tu presencia en la oscuridad del abismo.</p>
+      </div>
+      <div class="feature-card reveal">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M4 16 Q14 8 24 16 T44 16" stroke="#c77dff" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M4 26 Q14 18 24 26 T44 26" stroke="#c77dff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/><path d="M4 36 Q14 28 24 36 T44 36" stroke="#c77dff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.3"/></svg>
+        <h3>Corrientes alienígenas</h3>
+        <p>Mareas y corrientes con una física propia: aprende a leerlas para avanzar sin ser arrastrado.</p>
+      </div>
+      <div class="feature-card reveal">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 40 C24 40 14 34 14 24 C14 18 18 14 22 16 C22 10 28 8 30 14 C36 12 38 20 33 24 C38 26 36 34 30 32 C30 38 26 40 24 40 Z" stroke="#4dedd4" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>Arrecifes vivos</h3>
+        <p>Estructuras de coral que crecen, se cierran y se defienden como organismos completos.</p>
+      </div>
+      <div class="feature-card reveal">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="3" fill="#c77dff"/><path d="M24 24 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0" stroke="#c77dff" stroke-width="1.5" opacity="0.5"/><path d="M24 24 m-16,0 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0" stroke="#c77dff" stroke-width="1.5" opacity="0.25"/></svg>
+        <h3>Sonido abisal</h3>
+        <p>Un diseño de audio binaural pensado para sumergirte por completo con audífonos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bestiary" id="bestiario">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Bestiario</p>
+      <h2>Cuatro especies, cuatro profundidades</h2>
+      <p class="lede">Los mismos habitantes que ves aparecer y desaparecer detrás de esta página mientras te desplazas, cada uno propio de su franja de profundidad.</p>
+    </div>
+    <div class="bestiary-grid">
+      <div class="creature-card reveal">
+        <svg class="creature-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 20 C12 10 36 10 36 20 C36 24 32 22 30 26 L27 34 L24 27 L21 34 L18 26 C16 22 12 24 12 20 Z" fill="#4dedd4" opacity="0.85"/></svg>
+        <span class="depth-label">0–20 m</span>
+        <h3>Medusa luminiscente</h3>
+        <p>Flota en pequeños grupos justo bajo la superficie, encendiéndose al mínimo roce.</p>
+      </div>
+      <div class="creature-card reveal">
+        <svg class="creature-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 24 L26 15 L40 24 L26 33 Z" fill="#c77dff" opacity="0.85"/><path d="M6 24 L2 18 L2 30 Z" fill="#c77dff" opacity="0.6"/></svg>
+        <span class="depth-label">40–120 m</span>
+        <h3>Deslizador coralino</h3>
+        <p>Cruza el arrecife en línea recta, aprovechando las corrientes para no gastar energía.</p>
+      </div>
+      <div class="creature-card reveal">
+        <svg class="creature-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 14 L44 26 L34 30 L24 24 L14 30 L4 26 Z" fill="#7c93ff" opacity="0.8"/></svg>
+        <span class="depth-label">150–300 m</span>
+        <h3>Manta abisal</h3>
+        <p>Planea despacio en la zona media, donde ya casi no llega luz de la superficie.</p>
+      </div>
+      <div class="creature-card reveal">
+        <svg class="creature-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 24 C6 18 16 14 26 18 C34 21 34 27 26 30 C16 34 6 30 6 24 Z" fill="#1a1030" opacity="0.9"/><path d="M22 14 C22 10 26 8 28 10" stroke="#ff7a59" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="28.5" cy="9.5" r="2.2" fill="#ff7a59"/></svg>
+        <span class="depth-label">350–500 m</span>
+        <h3>Farolero de las profundidades</h3>
+        <p>Casi invisible en la fosa abisal; solo delata su posición el señuelo que cuelga sobre su cabeza.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery-teaser reveal" id="galeria">
+  <div class="section-inner gallery-inner">
+    <div class="section-head gallery-head">
+      <p class="eyebrow">Multimedia</p>
+      <h2>Imágenes y tráiler</h2>
+      <p class="lede">Estamos puliendo cada escena para mostrarte el océano en movimiento. Mientras tanto, aquí va un adelanto borroso de lo que se viene.</p>
+    </div>
+    <div class="gallery-preview">
+      <div class="gallery-blur-grid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="gallery-lock">
+        <svg class="gallery-play" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="#4dedd4" stroke-width="1.5" opacity="0.5"/>
+          <path d="M19 15 L34 24 L19 33 Z" fill="#4dedd4"/>
+        </svg>
+        <span class="badge">Próximamente</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="coming-soon" id="descarga">
+  <div class="section-inner">
+    <svg class="android-icon reveal" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+      <ellipse cx="26" cy="30" rx="16" ry="14" fill="#ff7a59" opacity="0.15"/>
+      <rect x="14" y="16" width="24" height="20" rx="8" fill="none" stroke="#ff7a59" stroke-width="2"/>
+      <circle cx="20" cy="25" r="2" fill="#ff7a59"/>
+      <circle cx="32" cy="25" r="2" fill="#ff7a59"/>
+      <path d="M18 16 L14 10 M34 16 L38 10" stroke="#ff7a59" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <p class="cs-label reveal">Para Android</p>
+    <h2 class="reveal">Coming Soon — LifeUnderWater for Android</h2>
+    <p class="lede reveal">Te avisamos por correo apenas esté disponible en Google Play. Sin spam, una sola notificación.</p>
+    <form class="email-form reveal" id="emailForm">
+      <input type="email" id="emailInput" placeholder="tu@email.com" required aria-label="Correo electrónico">
+      <button type="submit">Avisarme</button>
+    </form>
+    <p class="form-note reveal" id="formNote">Solo te escribiremos una vez, el día del lanzamiento.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <span class="foot-logo">LifeUnderWater</span>
+  <span>© 2026 · Página de muestra — sin afiliación con desarrolladores reales</span>
+  <span class="foot-signal">Transmisión finalizada a -500 m</span>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script src="js/scene.js" defer></script>
+<script src="js/site.js" defer></script>
+</body>
+</html>
