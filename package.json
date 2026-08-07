@@ -1,0 +1,27 @@
+{
+  "name": "life-under-water",
+  "version": "1.0.0",
+  "description": "LifeUnderWater - Coming Soon website for Android game",
+  "scripts": {
+    "test": "echo \"No tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlySwit/LifeUnderWater.git"
+  },
+  "keywords": [
+    "game",
+    "android",
+    "ocean",
+    "underwater"
+  ],
+  "author": "Olmic Developers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FlySwit/LifeUnderWater/issues"
+  },
+  "homepage": "https://github.com/FlySwit/LifeUnderWater#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
