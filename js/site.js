@@ -120,6 +120,172 @@
     });
   }
 
+  // ---------- Liquid glass: tilt de puntero + brillo especular ----------
+  // Se aplica a cualquier tarjeta de vidrio: tráiler, fotos y equipo.
+  var tiltEls = document.querySelectorAll('[data-tilt]');
+  if (!reducedMotion){
+    tiltEls.forEach(function(inner){
+      var panel = inner; // el propio .glass-panel
+      inner.addEventListener('pointermove', function(e){
+        var rect = inner.getBoundingClientRect();
+        var xPct = ((e.clientX - rect.left) / rect.width) * 100;
+        var yPct = ((e.clientY - rect.top) / rect.height) * 100;
+        panel.style.setProperty('--mx', xPct + '%');
+        panel.style.setProperty('--my', yPct + '%');
+
+        var dx = (xPct - 50) / 50;
+        var dy = (yPct - 50) / 50;
+        dx = Math.max(-1, Math.min(1, dx));
+        dy = Math.max(-1, Math.min(1, dy));
+        inner.style.setProperty('--ry', (dx * 7) + 'deg');
+        inner.style.setProperty('--rx', (dy * -7) + 'deg');
+        inner.style.setProperty('--tscale', '1.015');
+      });
+      inner.addEventListener('pointerleave', function(){
+        inner.style.setProperty('--rx', '0deg');
+        inner.style.setProperty('--ry', '0deg');
+        inner.style.setProperty('--tscale', '1');
+      });
+    });
+  }
+
+  // ---------- Parallax de scroll para tráiler, fotos y tarjetas del equipo ----------
+  var depthEls = Array.prototype.slice.call(document.querySelectorAll('[data-depth]'));
+  var parallaxTicking = false;
+  function updateParallaxDepths(){
+    if (!reducedMotion && depthEls.length){
+      var vh = window.innerHeight;
+      depthEls.forEach(function(el){
+        var depth = parseFloat(el.getAttribute('data-depth')) || 0;
+        var rect = el.getBoundingClientRect();
+        var center = rect.top + rect.height / 2;
+        var offset = (vh / 2 - center) * depth;
+        offset = Math.max(-70, Math.min(70, offset));
+        el.style.setProperty('--parallax-y', offset.toFixed(1) + 'px');
+      });
+    }
+    parallaxTicking = false;
+  }
+  if (depthEls.length){
+    window.addEventListener('scroll', function(){
+      if (!parallaxTicking){ requestAnimationFrame(updateParallaxDepths); parallaxTicking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', updateParallaxDepths);
+    updateParallaxDepths();
+  }
+
+  // ---------- Tráiler: reproducir/pausar ----------
+  var trailerVideo = document.getElementById('trailerVideo');
+  var trailerPlay = document.getElementById('trailerPlay');
+  var trailerFrame = document.getElementById('trailerFrame');
+  if (trailerVideo && trailerPlay && trailerFrame){
+    trailerPlay.addEventListener('click', function(){
+      trailerVideo.muted = false;
+      trailerVideo.controls = true;
+      trailerFrame.classList.add('is-playing');
+      trailerVideo.play().catch(function(){});
+    });
+    trailerVideo.addEventListener('pause', function(){
+      trailerFrame.classList.remove('is-playing');
+    });
+    trailerVideo.addEventListener('ended', function(){
+      trailerFrame.classList.remove('is-playing');
+      trailerVideo.controls = false;
+      trailerVideo.currentTime = 0;
+    });
+    if ('IntersectionObserver' in window){
+      var trailerIo = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (!entry.isIntersecting && !trailerVideo.paused){ trailerVideo.pause(); }
+        });
+      }, { threshold: 0.15 });
+      trailerIo.observe(trailerFrame);
+    }
+  }
+
+  // ---------- Carrusel de fotos: auto-avance, flechas, puntos y swipe ----------
+  (function initShotCarousel(){
+    var track = document.getElementById('shotTrack');
+    var viewport = document.getElementById('shotViewport');
+    var dotsWrap = document.getElementById('shotDots');
+    var prevBtn = document.getElementById('shotPrev');
+    var nextBtn = document.getElementById('shotNext');
+    if (!track || !viewport) return;
+
+    var slides = Array.prototype.slice.call(track.children);
+    var index = 0;
+    var AUTO_MS = 4500;
+    var timer = null;
+
+    slides.forEach(function(_, i){
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', 'Imagen ' + (i + 1));
+      if (i === 0) dot.classList.add('is-active');
+      dot.addEventListener('click', function(){ goTo(i); restartAuto(); });
+      dotsWrap.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+
+    function render(){
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      dots.forEach(function(d, i){ d.classList.toggle('is-active', i === index); });
+    }
+    function goTo(i){
+      index = (i + slides.length) % slides.length;
+      render();
+    }
+    function next(){ goTo(index + 1); }
+    function prev(){ goTo(index - 1); }
+
+    function startAuto(){
+      if (reducedMotion) return;
+      stopAuto();
+      timer = window.setInterval(next, AUTO_MS);
+    }
+    function stopAuto(){
+      if (timer){ window.clearInterval(timer); timer = null; }
+    }
+    function restartAuto(){ startAuto(); }
+
+    if (nextBtn) nextBtn.addEventListener('click', function(){ next(); restartAuto(); });
+    if (prevBtn) prevBtn.addEventListener('click', function(){ prev(); restartAuto(); });
+    viewport.addEventListener('pointerenter', stopAuto);
+    viewport.addEventListener('pointerleave', startAuto);
+
+    // Swipe táctil
+    var touchStartX = null;
+    viewport.addEventListener('touchstart', function(e){
+      touchStartX = e.touches[0].clientX;
+      stopAuto();
+    }, { passive: true });
+    viewport.addEventListener('touchend', function(e){
+      if (touchStartX === null) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40){ dx < 0 ? next() : prev(); }
+      touchStartX = null;
+      restartAuto();
+    }, { passive: true });
+
+    // Pausar cuando el carrusel no está visible en pantalla
+    if ('IntersectionObserver' in window){
+      var carouselEl = document.getElementById('shotCarousel');
+      if (carouselEl){
+        var shotIo = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            entry.isIntersecting ? startAuto() : stopAuto();
+          });
+        }, { threshold: 0.2 });
+        shotIo.observe(carouselEl);
+      }
+    } else {
+      startAuto();
+    }
+
+    render();
+  })();
+
   // Email form → Google Sheets (vía Google Apps Script)
   // 1) Sigue las instrucciones para crear tu Apps Script y publícalo como "Aplicación web".
   // 2) Pega aquí la URL que termina en /exec. Mientras esté vacía, el formulario funciona en modo demo.
